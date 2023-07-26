@@ -216,4 +216,5 @@ Resources:
             - logs:PutLogEvents
             - logs:DescribeLogStreams
             Resource:
-            - arn:aws:logs:*:*:*
+            - arn:aws
+            :logs:*:*:*

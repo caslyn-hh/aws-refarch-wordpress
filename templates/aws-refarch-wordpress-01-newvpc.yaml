@@ -832,42 +832,42 @@ Resources:
       Tags:
         - Key: Name
           Value: !Join [ '', [ 'Vpc / ', !Ref 'AWS::StackName' ] ]
-  VpcFlowLog:
-    Type: AWS::EC2::FlowLog
-    Properties:
-      DeliverLogsPermissionArn: !GetAtt VpcFlowLogsRole.Arn
-      LogGroupName: !Join [ '', [ !Ref 'AWS::StackName', '-FlowLog' ] ]
-      ResourceId: !Ref Vpc
-      ResourceType: VPC
-      TrafficType: ALL
-  VpcFlowLogsLogGroup:
-    Type: AWS::Logs::LogGroup
-  VpcFlowLogsRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Action:
-              - sts:AssumeRole
-            Effect: Allow
-            Principal:
-              Service:
-                - vpc-flow-logs.amazonaws.com
-      Path: '/'
-      Policies:
-        - PolicyName: root
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Action:
-                  - logs:CreateLogGroup
-                  - logs:CreateLogStream
-                  - logs:DescribeLogGroups
-                  - logs:DescribeLogStreams
-                  - logs:PutLogEvents
-                Effect: Allow
-                Resource: '*'
+  # VpcFlowLog:
+  #   Type: AWS::EC2::FlowLog
+  #   Properties:
+  #     DeliverLogsPermissionArn: !GetAtt VpcFlowLogsRole.Arn
+  #     LogGroupName: !Join [ '', [ !Ref 'AWS::StackName', '-FlowLog' ] ]
+  #     ResourceId: !Ref Vpc
+  #     ResourceType: VPC
+  #     TrafficType: ALL
+  # VpcFlowLogsLogGroup:
+  #   Type: AWS::Logs::LogGroup
+  # VpcFlowLogsRole:
+  #   Type: AWS::IAM::Role
+  #   Properties:
+  #     AssumeRolePolicyDocument:
+  #       Version: 2012-10-17
+  #       Statement:
+  #         - Action:
+  #             - sts:AssumeRole
+  #           Effect: Allow
+  #           Principal:
+  #             Service:
+  #               - vpc-flow-logs.amazonaws.com
+  #     Path: '/'
+  #     Policies:
+  #       - PolicyName: root
+  #         PolicyDocument:
+  #           Version: 2012-10-17
+  #           Statement:
+  #             - Action:
+  #                 - logs:CreateLogGroup
+  #                 - logs:CreateLogStream
+  #                 - logs:DescribeLogGroups
+  #                 - logs:DescribeLogStreams
+  #                 - logs:PutLogEvents
+  #               Effect: Allow
+  #               Resource: '*'
 
 Outputs:
   

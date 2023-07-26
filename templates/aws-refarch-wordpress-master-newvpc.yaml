@@ -467,8 +467,8 @@ Parameters:
   PHPVersion:
     AllowedValues:
     - 8.1
-    - 8.0
     - 7.4
+    - 5.5
     Default: 8.1
     Description: The version of PHP to install.
     Type: String 
@@ -567,7 +567,7 @@ Parameters:
     - 4
     - 5
     - 6
-    Default: 3
+    Default: 2
     Description: Number of Availability Zones to use in the VPC. This must match your
       selections in the list of Availability Zones parameter.
     Type: Number
@@ -763,29 +763,29 @@ Resources:
         WPDomainName:
           !Ref WPDomainName
       TemplateURL: https://s3.amazonaws.com/aws-refarch/wordpress/latest/templates/aws-refarch-wordpress-04-cloudfront.yaml
-  dashboardwithalarms:
-    Condition: EfsCreateAlarms
-    DependsOn: [ newvpc, securitygroups, publicalb, efsfilesystem, rds, efsalarms ]
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      Parameters:
-        ElasticFileSystem:
-          !GetAtt [ efsfilesystem, Outputs.ElasticFileSystem ]
-        DatabaseCluster:
-          !GetAtt [ rds, Outputs.DatabaseCluster ]
-        BurstCreditBalanceDecreaseAlarmArn:
-          !GetAtt [ efsalarms, Outputs.BurstCreditBalanceDecreaseAlarmArn ]
-        BurstCreditBalanceIncreaseAlarmArn:
-          !GetAtt [ efsalarms, Outputs.BurstCreditBalanceIncreaseAlarmArn ]
-        CriticalAlarmArn:
-          !GetAtt [ efsalarms, Outputs.CriticalAlarmArn ]
-        WarningAlarmArn:
-          !GetAtt [ efsalarms, Outputs.WarningAlarmArn ]
-        PublicAlbFullName:
-          !GetAtt [ publicalb, Outputs.PublicAlbFullName ]
-        EfsCreateAlarms:
-          !Ref EfsCreateAlarms         
-      TemplateURL: https://s3.amazonaws.com/aws-refarch/wordpress/latest/templates/aws-refarch-wordpress-06-dashboard.yaml
+  # dashboardwithalarms:
+  #   Condition: EfsCreateAlarms
+  #   DependsOn: [ newvpc, securitygroups, publicalb, efsfilesystem, rds, efsalarms ]
+  #   Type: AWS::CloudFormation::Stack
+  #   Properties:
+  #     Parameters:
+  #       ElasticFileSystem:
+  #         !GetAtt [ efsfilesystem, Outputs.ElasticFileSystem ]
+  #       DatabaseCluster:
+  #         !GetAtt [ rds, Outputs.DatabaseCluster ]
+  #       BurstCreditBalanceDecreaseAlarmArn:
+  #         !GetAtt [ efsalarms, Outputs.BurstCreditBalanceDecreaseAlarmArn ]
+  #       BurstCreditBalanceIncreaseAlarmArn:
+  #         !GetAtt [ efsalarms, Outputs.BurstCreditBalanceIncreaseAlarmArn ]
+  #       CriticalAlarmArn:
+  #         !GetAtt [ efsalarms, Outputs.CriticalAlarmArn ]
+  #       WarningAlarmArn:
+  #         !GetAtt [ efsalarms, Outputs.WarningAlarmArn ]
+  #       PublicAlbFullName:
+  #         !GetAtt [ publicalb, Outputs.PublicAlbFullName ]
+  #       EfsCreateAlarms:
+  #         !Ref EfsCreateAlarms         
+  #     TemplateURL: https://s3.amazonaws.com/aws-refarch/wordpress/latest/templates/aws-refarch-wordpress-06-dashboard.yaml
   dashboardwithnoalarms:
     Condition: EfsCreateNoAlarms
     DependsOn: [ newvpc, securitygroups, publicalb, efsfilesystem, rds ]
@@ -826,32 +826,32 @@ Resources:
           !Ref EfsPerformanceMode
         Subnet:
           !GetAtt [ newvpc, Outputs.DataSubnet ]
-      TemplateURL: https://s3.amazonaws.com/aws-refarch/wordpress/latest/templates/aws-refarch-wordpress-03-efsfilesystem.yaml
-  efsalarms:
-    Condition: EfsCreateAlarms
-    DependsOn: [ efsfilesystem ]
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      Parameters:
-        CriticalThreshold:
-          !Ref EfsCriticalThreshold
-        EC2KeyName:
-          !Ref EC2KeyName
-        ElasticFileSystem:
-          !GetAtt [ efsfilesystem, Outputs.ElasticFileSystem ]
-        EmailAddress:
-          !Ref AdminEmail
-        SecurityGroup:
-          !GetAtt [ securitygroups, Outputs.EfsSecurityGroup ]
-        InstanceType:
-          !Ref EfsAlarmsInstanceType
-        NumberOfSubnets:
-          !Ref NumberOfAZs  
-        Subnet:
-          !GetAtt [ newvpc, Outputs.DataSubnet ]
-        WarningThreshold:
-          !Ref EfsWarningThreshold
-      TemplateURL: https://s3.amazonaws.com/aws-refarch/wordpress/latest/templates/aws-refarch-wordpress-03-efsalarms.yaml
+      TemplateURL: https://cf-templates-1tz09qn9hk7ds-ap-southeast-1.s3.ap-southeast-1.amazonaws.com/aws-refarch-wordpress-03-efsfilesystem.yaml
+  # efsalarms:
+  #   Condition: EfsCreateAlarms
+  #   DependsOn: [ efsfilesystem ]
+  #   Type: AWS::CloudFormation::Stack
+  #   Properties:
+  #     Parameters:
+  #       CriticalThreshold:
+  #         !Ref EfsCriticalThreshold
+  #       EC2KeyName:
+  #         !Ref EC2KeyName
+  #       ElasticFileSystem:
+  #         !GetAtt [ efsfilesystem, Outputs.ElasticFileSystem ]
+  #       EmailAddress:
+  #         !Ref AdminEmail
+  #       SecurityGroup:
+  #         !GetAtt [ securitygroups, Outputs.EfsSecurityGroup ]
+  #       InstanceType:
+  #         !Ref EfsAlarmsInstanceType
+  #       NumberOfSubnets:
+  #         !Ref NumberOfAZs  
+  #       Subnet:
+  #         !GetAtt [ newvpc, Outputs.DataSubnet ]
+  #       WarningThreshold:
+  #         !Ref EfsWarningThreshold
+  #     TemplateURL: https://s3.amazonaws.com/aws-refarch/wordpress/latest/templates/aws-refarch-wordpress-03-efsalarms.yaml
   elasticache:
     Condition: DeployElastiCache
     DependsOn: [ newvpc, securitygroups ]
@@ -917,7 +917,7 @@ Resources:
           !Ref DataSubnet4Cidr
         DataSubnet5Cidr:
           !Ref DataSubnet5Cidr
-      TemplateURL: https://s3.amazonaws.com/aws-refarch/wordpress/latest/templates/aws-refarch-wordpress-01-newvpc.yaml
+      TemplateURL: https://cf-templates-1tz09qn9hk7ds-ap-southeast-1.s3.ap-southeast-1.amazonaws.com/aws-refarch-wordpress-01-newvpc.yaml
   publicalb:
     Condition: AvailableAWSRegion
     DependsOn: [ newvpc, securitygroups ]
@@ -959,7 +959,7 @@ Resources:
           !GetAtt [ newvpc, Outputs.DataSubnet ]
         NumberOfSubnets:
           !Ref NumberOfAZs
-      TemplateURL: https://s3.amazonaws.com/aws-refarch/wordpress/latest/templates/aws-refarch-wordpress-03-rds.yaml
+      TemplateURL: https://cf-templates-1tz09qn9hk7ds-ap-southeast-1.s3.ap-southeast-1.amazonaws.com/aws-refarch-wordpress-03-rds.yaml
   route53:
     Condition: CreateRecordSet
     DependsOn: [ publicalb, web ]
@@ -1040,7 +1040,7 @@ Resources:
           !Ref WPTitle
         WPVersion:
           !Ref WPVersion
-      TemplateURL: https://s3.amazonaws.com/aws-refarch/wordpress/latest/templates/aws-refarch-wordpress-04-web.yaml
+      TemplateURL: https://cf-templates-1tz09qn9hk7ds-ap-southeast-1.s3.ap-southeast-1.amazonaws.com/aws-refarch-wordpress-04-web.yaml
 
 Outputs:
 
